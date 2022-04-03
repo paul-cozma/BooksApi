@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using AppBuild.Models;
 using DockerModel;
 using Terminal;
+
 namespace BooksApi.Controllers
 {
     [Route("api/[controller]")]
@@ -178,7 +179,7 @@ namespace BooksApi.Controllers
 
         // get the repository url and build the docker image based on the repository url
         [HttpPost("/api/AppBuild/{id}/{version}/build")]
-        public async Task<IActionResult> BuildDocker(int id, string version)
+        public async Task<ActionResult<BuildModel>> BuildDocker(int id, string version)
         {
             // get repository url by id
             var environment = await _context.AppModels.FindAsync(id);
@@ -193,20 +194,28 @@ namespace BooksApi.Controllers
             var folderExists = await Terminal.RunTerminalCommand.RunCommand(doesAppFolderExist);
 
             var gitInstall = $"git clone {repositoryUrl} {appName}";
-            var goToRepoPath = $"cd {appName}";
+            var goToRepoPath = $"cd {appName}/admin";
             if (folderExists == "true\n")
             {
                 gitInstall = $"cd /home/paulc/{appName} && git pull";
-                goToRepoPath = $"cd /home/paulc/{appName}";
+                goToRepoPath = $"cd /home/paulc/{appName}/admin";
             }
-            var buildCommand = $"docker build -t {appName}:{version} .";
-            var tagImage = $"docker tag {appName}:{version} localhost:5000/{appName}:{version}";
-            var pushImage = $"docker push localhost:5000/{appName}:{version}";
-            var runAllCommands = $"{goToBuildPath} && {gitInstall} && {goToRepoPath} && {buildCommand} && {tagImage} && {pushImage}.";
+            var buildCommand = $"docker build -t {appName}/admin:{version} .";
+            var tagImage = $"docker tag {appName}/admin:{version} localhost:5000/{appName}/admin:{version}";
+            var pushImage = $"docker push localhost:5000/{appName}/admin:{version}";
+            var runAllCommands = $"{goToBuildPath} && {gitInstall} && {goToRepoPath} && {buildCommand} && {tagImage} && {pushImage}";
             // run all commands in terminal
             var buildCommandResult = await Terminal.RunTerminalCommand.RunCommand(runAllCommands);
-
-            return NoContent();
+            // insert build command result into database in the build table
+            var build = new BuildModel
+            {
+                AppModelId = id,
+                Status = buildCommandResult,
+                Version = version,
+                Date = DateTime.Now,
+                User = "paulc"
+            };
+            return build;
 
         }
 

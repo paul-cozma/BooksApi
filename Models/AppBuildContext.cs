@@ -11,5 +11,7 @@ namespace AppBuild.Models
 
         public DbSet<AppModel> AppModels { get; set; }
         public DbSet<Envs> Envs { get; set; }
+        public DbSet<BuildModel> BuildModel { get; set; }
+
     }
 }

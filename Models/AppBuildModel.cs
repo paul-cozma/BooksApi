@@ -7,6 +7,7 @@ namespace AppBuild.Models
         public int Id { get; set; }
         public string AppName { get; set; }
         public ICollection<Envs>? Envs { get; set; }
+        public ICollection<BuildModel>? Builds { get; set; }
         public string RepositoryUrl { get; set; }
     }
 
@@ -16,6 +17,15 @@ namespace AppBuild.Models
         public string Name { get; set; }
         public string Url { get; set; }
 
+        public int AppModelId { get; set; }
+    }
+    public class BuildModel
+    {
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public string? Version { get; set; }
+        public string? Status { get; set; }
+        public string? User { get; set; }
         public int AppModelId { get; set; }
     }
 }
