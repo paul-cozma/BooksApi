@@ -1,0 +1,31 @@
+Arguments: 
+  /usr/bin/node /usr/bin/yarn
+
+PATH: 
+  /home/paulc/.local/bin:/home/paulc/.local/bin:/usr/local/bin:/usr/bin:/var/lib/snapd/snap/bin:/usr/local/sbin:/home/paulc/.dotnet/tools:/var/lib/flatpak/exports/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/usr/share/dotnet:/usr/share/dotnet
+
+Yarn version: 
+  1.22.18
+
+Node version: 
+  17.7.1
+
+Platform: 
+  linux x64
+
+Trace: 
+  SyntaxError: /home/paulc/Documents/BooksApi/admin/package.json: Unexpected end of JSON input
+      at JSON.parse (<anonymous>)
+      at /usr/lib/node_modules/yarn/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/usr/lib/node_modules/yarn/lib/cli.js:310:30)
+      at /usr/lib/node_modules/yarn/lib/cli.js:321:13
+
+npm manifest: 
+  
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
