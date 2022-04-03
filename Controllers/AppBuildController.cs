@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AppBuild.Models;
 using DockerModel;
+using Terminal;
 namespace BooksApi.Controllers
 {
     [Route("api/[controller]")]
@@ -172,6 +173,40 @@ namespace BooksApi.Controllers
             return dockerModel;
 
 
+
+        }
+
+        // get the repository url and build the docker image based on the repository url
+        [HttpPost("/api/AppBuild/{id}/{version}/build")]
+        public async Task<IActionResult> BuildDocker(int id, string version)
+        {
+            // get repository url by id
+            var environment = await _context.AppModels.FindAsync(id);
+            if (environment == null)
+            {
+                return NotFound();
+            }
+            var repositoryUrl = environment.RepositoryUrl;
+            var appName = environment.AppName;
+            var goToBuildPath = $"cd /home/paulc";
+            var doesAppFolderExist = $"if [ -d /home/paulc/{appName} ]; then echo 'true'; else echo 'false'; fi";
+            var folderExists = await Terminal.RunTerminalCommand.RunCommand(doesAppFolderExist);
+
+            var gitInstall = $"git clone {repositoryUrl} {appName}";
+            var goToRepoPath = $"cd {appName}";
+            if (folderExists == "true\n")
+            {
+                gitInstall = $"cd /home/paulc/{appName} && git pull";
+                goToRepoPath = $"cd /home/paulc/{appName}";
+            }
+            var buildCommand = $"docker build -t {appName}:{version} .";
+            var tagImage = $"docker tag {appName}:{version} localhost:5000/{appName}:{version}";
+            var pushImage = $"docker push localhost:5000/{appName}:{version}";
+            var runAllCommands = $"{goToBuildPath} && {gitInstall} && {goToRepoPath} && {buildCommand} && {tagImage} && {pushImage}.";
+            // run all commands in terminal
+            var buildCommandResult = await Terminal.RunTerminalCommand.RunCommand(runAllCommands);
+
+            return NoContent();
 
         }
 

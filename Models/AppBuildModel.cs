@@ -6,7 +6,7 @@ namespace AppBuild.Models
     {
         public int Id { get; set; }
         public string AppName { get; set; }
-        public ICollection<Envs> Envs { get; set; }
+        public ICollection<Envs>? Envs { get; set; }
         public string RepositoryUrl { get; set; }
     }
 

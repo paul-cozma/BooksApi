@@ -1,10 +1,9 @@
 // add a method to run a bash command in the terminal
-
-namespace BookStore.Services
+namespace Terminal
 {
     public class RunTerminalCommand
     {
-        public static string RunCommand(string command)
+        public static async Task<string> RunCommand(string command)
         {
             var escapedArgs = command.Replace("\"", "\\\"");
 
@@ -21,7 +20,7 @@ namespace BookStore.Services
             };
             process.Start();
             string result = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
+            await process.WaitForExitAsync();
             return result;
         }
     }
