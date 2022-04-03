@@ -215,6 +215,7 @@ namespace BooksApi.Controllers
                 Date = DateTime.Now,
                 User = "paulc"
             };
+            _context.BuildModel.Add(build);
             return build;
 
         }
