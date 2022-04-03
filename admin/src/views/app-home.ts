@@ -7,7 +7,7 @@ import { BaseView } from "./base-view";
 export class AppHome extends BaseView {
     render() {
         return html`
-        <h1>Hello, home!</h1>
+        <h1>Hello, ma dudes!</h1>
         `;
     }
     }
